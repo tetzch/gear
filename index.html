@@ -1,32 +1,9 @@
 
 <!DOCTYPE html>
-// ① HTMLだけをinnerHTMLで書き込む
-card.innerHTML = `
-  <h2 class="card-header" style="cursor:pointer;">${item["道具の名前"]}</h2>
-  <div class="card-body" style="display:none;">
-    <p><strong>カテゴリ:</strong> ${item["カテゴリ"]}</p>
-    <p><strong>持ち主:</strong> ${item["持ち主"]}</p>
-    <p><strong>場所:</strong> ${item["保管場所"]}</p>
-    <p><strong>状態:</strong> ${item["状態"]}</p>
-    <p><strong>メモ:</strong> ${item["メモ"]}</p>
-    ${item["写真"] ? `<img src="${item["写真"].replace("open?id=", "uc?export=view&id=")}" alt="写真">` : ""}
-    <div>${item["タグ"].split(',').map(tag => `<span class="tag">${tag.trim()}</span>`).join(' ')}</div>
-  </div>
-`;
-
-// ② HTMLを書き込んだあとに、JSで動的処理！
-card.querySelector('.card-header').addEventListener('click', () => {
-  const body = card.querySelector('.card-body');
-  body.style.display = (body.style.display === "none") ? "block" : "none";
-});
-
-// ③ CSSクラスを追加して色分け
-card.classList.add(item["持ち主"] === "てつ" ? "tecu" : "yuu");
-
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>ギア棚</title>
+  <title>ギア棚ぁ</title>
   <style>
     body {
       font-family: sans-serif;
@@ -35,14 +12,26 @@ card.classList.add(item["持ち主"] === "てつ" ? "tecu" : "yuu");
     }
     h1 {
       text-align: center;
+      margin-bottom: 1em;
     }
     .card {
       background: white;
       border-radius: 10px;
       box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
       margin: 10px auto;
-      padding: 15px;
+      padding: 0;
       max-width: 500px;
+      overflow: hidden;
+    }
+    .card-header {
+      font-size: 1.2em;
+      font-weight: bold;
+      padding: 12px 15px;
+      cursor: pointer;
+    }
+    .card-body {
+      padding: 0 15px 15px;
+      display: none;
     }
     .card img {
       max-width: 100%;
@@ -57,13 +46,14 @@ card.classList.add(item["持ち主"] === "てつ" ? "tecu" : "yuu");
       border-radius: 4px;
       font-size: 0.9em;
     }
-    .card.tecu {
-  border-left: 6px solid #4caf50; /* 緑：てつ用 */
-}
-.card.yuu {
-  border-left: 6px solid #03a9f4; /* 青：ゆう用 */
-}
-
+    .tecu .card-header {
+      background-color: #e0f7e9;
+      border-left: 6px solid #4caf50;
+    }
+    .yuu .card-header {
+      background-color: #e1f3fc;
+      border-left: 6px solid #03a9f4;
+    }
   </style>
 </head>
 <body>
@@ -80,23 +70,29 @@ card.classList.add(item["持ち主"] === "てつ" ? "tecu" : "yuu");
         container.innerHTML = "";
         data.forEach(item => {
           const card = document.createElement("div");
-          card.className = "card";
-          const imageTag = item["写真"]
-            ? `<img src="${item['写真'].replace('open?id=', 'uc?export=view&id=')}" alt="写真">`
-            : "";
-          const tags = item["タグ"]
-            ? item["タグ"].split(',').map(tag => `<span class="tag">${tag.trim()}</span>`).join(' ')
-            : "";
+          const ownerClass = item["持ち主"] === "てつ" ? "tecu" : "yuu";
+          card.className = "card " + ownerClass;
+
           card.innerHTML = `
-            <h2>${item["道具の名前"]}</h2>
-            <p><strong>カテゴリ:</strong> ${item["カテゴリ"]}</p>
-            <p><strong>持ち主:</strong> ${item["持ち主"]}</p>
-            <p><strong>場所:</strong> ${item["保管場所"]}</p>
-            <p><strong>状態:</strong> ${item["状態"]}</p>
-            <p><strong>メモ:</strong> ${item["メモ"]}</p>
-            ${imageTag}
-            <div>${tags}</div>
+            <div class="card-header">${item["道具の名前"]}</div>
+            <div class="card-body">
+              <p><strong>カテゴリ:</strong> ${item["カテゴリ"]}</p>
+              <p><strong>持ち主:</strong> ${item["持ち主"]}</p>
+              <p><strong>場所:</strong> ${item["保管場所"]}</p>
+              <p><strong>状態:</strong> ${item["状態"]}</p>
+              <p><strong>寸法:</strong> ${item["寸法"] || "（未記入）"}</p>
+              <p><strong>メモ:</strong> ${item["メモ"]}</p>
+              ${item["写真"] ? `<img src="${item["写真"].replace("open?id=", "uc?export=view&id=")}" alt="写真">` : ""}
+              <div>${item["タグ"].split(',').map(tag => `<span class="tag">${tag.trim()}</span>`).join(' ')}</div>
+            </div>
           `;
+
+          const header = card.querySelector('.card-header');
+          const body = card.querySelector('.card-body');
+          header.addEventListener('click', () => {
+            body.style.display = body.style.display === "none" ? "block" : "none";
+          });
+
           container.appendChild(card);
         });
       })
