@@ -1,16 +1,26 @@
 
 <!DOCTYPE html>
+// ① HTMLだけをinnerHTMLで書き込む
 card.innerHTML = `
   <h2 class="card-header" style="cursor:pointer;">${item["道具の名前"]}</h2>
   <div class="card-body" style="display:none;">
-    ...中身...
+    <p><strong>カテゴリ:</strong> ${item["カテゴリ"]}</p>
+    <p><strong>持ち主:</strong> ${item["持ち主"]}</p>
+    <p><strong>場所:</strong> ${item["保管場所"]}</p>
+    <p><strong>状態:</strong> ${item["状態"]}</p>
+    <p><strong>メモ:</strong> ${item["メモ"]}</p>
+    ${item["写真"] ? `<img src="${item["写真"].replace("open?id=", "uc?export=view&id=")}" alt="写真">` : ""}
+    <div>${item["タグ"].split(',').map(tag => `<span class="tag">${tag.trim()}</span>`).join(' ')}</div>
   </div>
 `;
 
+// ② HTMLを書き込んだあとに、JSで動的処理！
 card.querySelector('.card-header').addEventListener('click', () => {
   const body = card.querySelector('.card-body');
   body.style.display = (body.style.display === "none") ? "block" : "none";
 });
+
+// ③ CSSクラスを追加して色分け
 card.classList.add(item["持ち主"] === "てつ" ? "tecu" : "yuu");
 
 <html lang="ja">
