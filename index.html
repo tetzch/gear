@@ -1,5 +1,18 @@
 
 <!DOCTYPE html>
+card.innerHTML = `
+  <h2 class="card-header" style="cursor:pointer;">${item["道具の名前"]}</h2>
+  <div class="card-body" style="display:none;">
+    ...中身...
+  </div>
+`;
+
+card.querySelector('.card-header').addEventListener('click', () => {
+  const body = card.querySelector('.card-body');
+  body.style.display = (body.style.display === "none") ? "block" : "none";
+});
+card.classList.add(item["持ち主"] === "てつ" ? "tecu" : "yuu");
+
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
@@ -34,6 +47,13 @@
       border-radius: 4px;
       font-size: 0.9em;
     }
+    .card.tecu {
+  border-left: 6px solid #4caf50; /* 緑：てつ用 */
+}
+.card.yuu {
+  border-left: 6px solid #03a9f4; /* 青：ゆう用 */
+}
+
   </style>
 </head>
 <body>
