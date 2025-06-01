@@ -80,7 +80,8 @@
               <p><strong>持ち主:</strong> ${item["持ち主"]}</p>
               <p><strong>場所:</strong> ${item["保管場所"]}</p>
               <p><strong>状態:</strong> ${item["状態"]}</p>
-              <p><strong>寸法:</strong> ${item["寸法"] || "（未記入）"}</p>
+              <p><strong>収納時寸法:</strong> ${item["寸法（収納時の実寸ざっくり）"] || "（未記入）"}</p>
+              <p><strong>展開時寸法:</strong> ${item["寸法（展開時の実寸）"] || "（未記入）"}</p>
               <p><strong>メモ:</strong> ${item["メモ"]}</p>
               ${item["写真"] ? `<img src="${item["写真"].replace("open?id=", "uc?export=view&id=")}" alt="写真">` : ""}
               <div>${item["タグ"].split(',').map(tag => `<span class="tag">${tag.trim()}</span>`).join(' ')}</div>
