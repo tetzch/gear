@@ -1,0 +1,79 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>てっちゃんのギア棚</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f5f5f5;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+    }
+    .card {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+      margin: 10px auto;
+      padding: 15px;
+      max-width: 500px;
+    }
+    .card img {
+      max-width: 100%;
+      border-radius: 5px;
+      margin-top: 10px;
+    }
+    .tag {
+      background: #e0e0e0;
+      display: inline-block;
+      margin: 2px 4px 2px 0;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.9em;
+    }
+  </style>
+</head>
+<body>
+  <h1>てっちゃんのギア棚</h1>
+  <div id="gear-container">読み込み中…</div>
+
+  <script>
+    const sheetUrl = "https://script.google.com/macros/s/AKfycbySDMHph0NR5snpF3TLCzGwrxeiWUJ7w1EEK2c24CgEapOqiNChqelmh322QA2MpKj_/exec";
+
+    fetch(sheetUrl)
+      .then(res => res.json())
+      .then(data => {
+        const container = document.getElementById("gear-container");
+        container.innerHTML = "";
+        data.forEach(item => {
+          const card = document.createElement("div");
+          card.className = "card";
+          const imageTag = item["写真"]
+            ? `<img src="${item['写真'].replace('open?id=', 'uc?export=view&id=')}" alt="写真">`
+            : "";
+          const tags = item["タグ"]
+            ? item["タグ"].split(',').map(tag => `<span class="tag">${tag.trim()}</span>`).join(' ')
+            : "";
+          card.innerHTML = `
+            <h2>${item["道具の名前"]}</h2>
+            <p><strong>カテゴリ:</strong> ${item["カテゴリ"]}</p>
+            <p><strong>持ち主:</strong> ${item["持ち主"]}</p>
+            <p><strong>場所:</strong> ${item["保管場所"]}</p>
+            <p><strong>状態:</strong> ${item["状態"]}</p>
+            <p><strong>メモ:</strong> ${item["メモ"]}</p>
+            ${imageTag}
+            <div>${tags}</div>
+          `;
+          container.appendChild(card);
+        });
+      })
+      .catch(err => {
+        document.getElementById("gear-container").innerText = "読み込みに失敗しました。";
+        console.error("読み込みエラー:", err);
+      });
+  </script>
+</body>
+</html>
