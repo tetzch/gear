@@ -66,6 +66,12 @@
     .yuu {
       border-left: 4px solid #03a9f4;
     }
+    .memo {
+  font-size: 0.85em;
+  color: #555;
+  margin-top: 4px;
+  line-height: 1.4;
+}
   </style>
 </head>
 <body>
@@ -97,6 +103,7 @@
               <p><strong>持ち主:</strong> ${item["持ち主"]}</p>
               <p><strong>寸法:</strong> ${item["展開時寸法"] || "（未記入）"}</p>
               <p><strong>状態:</strong> ${item["状態"]}</p>
+              <p class="memo">${item["メモ"] || ""}</p>
               <div>${item["タグ"]?.split(',').map(tag => `<span class="tag">${tag.trim()}</span>`).join(' ') || ""}</div>
             </div>
           `;
