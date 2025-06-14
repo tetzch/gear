@@ -104,10 +104,15 @@
             } else if (rawUrl.includes("open?id=")) {
               fileId = rawUrl.split("open?id=")[1].split("&")[0];
             }
+            
+          if (fileId) {
+            // ここでencodeURIComponentを使うと良いかも
+            embedUrl = `https://drive.google.com/uc?export=view&id=${encodeURIComponent(fileId)}`;
+          }
 
-            if (fileId) {
-              embedUrl = `https://drive.google.com/uc?export=view&id=${fileId}`;
-            }
+//            if (fileId) {
+//              embedUrl = `https://drive.google.com/uc?export=view&id=${fileId}`;
+//            }
           } else if (rawUrl) {
             embedUrl = './img/' + rawUrl;
           }
