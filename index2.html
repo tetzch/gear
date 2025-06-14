@@ -91,27 +91,40 @@
           const card = document.createElement("div");
           card.className = "card " + ownerClass;
 
-  const image = item["写真"]
+const image = item["写真"]
   ? (() => {
       const url = item["写真"].trim();
-      let embedUrl = url;
+      let embedUrl = "";
 
-      // Google Drive共有URLの形式に応じて変換
       if (url.includes("drive.google.com")) {
-        if (url.includes("file/d/")) {
-          const fileId = url.match(/\/file\/d\/(.+?)\//)?.[1];
+        let fileId = null;
+
+        // 新形式: https://drive.google.com/file/d/FILEID/view
+        if (url.includes("/file/d/")) {
+          const match = url.match(/\/file\/d\/([^/]+)\//);
+          if (match) fileId = match[1];
+        }
+
+        // 旧形式: https://drive.google.com/open?id=FILEID
+        if (url.includes("open?id=")) {
+          fileId = url.split("open?id=")[1].split("&")[0];
+        }
+
+        if (fileId) {
           embedUrl = `https://drive.google.com/uc?export=view&id=${fileId}`;
-        } else if (url.includes("open?id=")) {
-          embedUrl = url.replace("open?id=", "uc?export=view&id=");
         }
       } else {
+        // ローカル or 相対パス
         embedUrl = './img/' + url;
       }
 
-      return `<a href="${url}" target="_blank"><img src="${embedUrl}" alt="写真" width="80"></a>`;
+      return embedUrl
+        ? `<a href="${url}" target="_blank"><img src="${embedUrl}" alt="写真" width="80"></a>`
+        : `<img src="https://via.placeholder.com/80?text=No+Image" alt="写真">`;
     })()
-  : `<img src="https://via.placeholder.com/80?text=No+Image" alt="写真">`;      card.innerHTML = `
-            ${image}
+  : `<img src="https://via.placeholder.com/80?text=No+Image" alt="写真">`;
+  
+                ${image}
             <div class="card-content">
               <h2>${item["道具の名前"]}</h2>
               <p><strong>カテゴリ:</strong> ${item["カテゴリ"]}</p>
