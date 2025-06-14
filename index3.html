@@ -93,7 +93,7 @@
 
           // 写真処理（Drive対応含む）
           const rawUrl = item["写真"]?.trim() || "";
-          let embedUrl = "";
+          let displayImageUrl = ""; // imgのsrcとaのhref両方に使うURL
 
           if (rawUrl.includes("drive.google.com")) {
             let fileId = null;
@@ -104,23 +104,22 @@
             } else if (rawUrl.includes("open?id=")) {
               fileId = rawUrl.split("open?id=")[1].split("&")[0];
             }
-            
-          if (fileId) {
-            // ここでencodeURIComponentを使うと良いかも
-            embedUrl = `https://drive.google.com/uc?export=view&id=${encodeURIComponent(fileId)}`;
-          }
 
-//            if (fileId) {
-//              embedUrl = `https://drive.google.com/uc?export=view&id=${fileId}`;
-//            }
+            if (fileId) {
+              // ここでencodeURIComponentを使う
+              displayImageUrl = `https://drive.google.com/uc?export=view&id=${encodeURIComponent(fileId)}`;
+            }
           } else if (rawUrl) {
-            embedUrl = './img/' + rawUrl;
+            displayImageUrl = './img/' + rawUrl;
           }
 
-          const image = embedUrl
-            ? `<a href="${rawUrl}" target="_blank"><img src="${embedUrl}" alt="写真"></a>`
+          const image = displayImageUrl
+            ? `<a href="${displayImageUrl}" target="_blank"><img src="${displayImageUrl}" alt="写真"></a>` // aタグのhrefもimgタグのsrcもdisplayImageUrlを使う
             : `<img src="https://via.placeholder.com/80?text=No+Image" alt="写真">`;
 
+
+
+          
           // HTML反映
           card.innerHTML = `
             ${image}
