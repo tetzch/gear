@@ -92,10 +92,25 @@
           card.className = "card " + ownerClass;
 
           const image = item["写真"]
-            ? `<a href="${item["写真"]}" target="_blank"><img src="${item["写真"].includes('drive.google.com') ? item["写真"].replace("open?id=", "uc?export=view&id=") : './img/' + item["写真"].trim()}" alt="写真"></a>`
-            : `<img src="https://via.placeholder.com/80?text=No+Image" alt="写真">`;
+  ? (() => {
+      const url = item["写真"].trim();
+      let embedUrl = url;
 
-          card.innerHTML = `
+      // Google Drive共有URLの形式に応じて変換
+      if (url.includes("drive.google.com")) {
+        if (url.includes("file/d/")) {
+          const fileId = url.match(/\/file\/d\/(.+?)\//)?.[1];
+          embedUrl = `https://drive.google.com/uc?export=view&id=${fileId}`;
+        } else if (url.includes("open?id=")) {
+          embedUrl = url.replace("open?id=", "uc?export=view&id=");
+        }
+      } else {
+        embedUrl = './img/' + url;
+      }
+
+      return `<a href="${url}" target="_blank"><img src="${embedUrl}" alt="写真" width="80"></a>`;
+    })()
+  : `<img src="https://via.placeholder.com/80?text=No+Image" alt="写真">`;      card.innerHTML = `
             ${image}
             <div class="card-content">
               <h2>${item["道具の名前"]}</h2>
