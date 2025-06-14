@@ -96,32 +96,22 @@
       const url = item["写真"].trim();
       let embedUrl = url;
 
+      // Google Drive共有URLの形式に応じて変換
       if (url.includes("drive.google.com")) {
-        // Try to match both new and old formats
-        let fileId = null;
-
-        if (url.includes("/file/d/")) {
-          fileId = url.match(/\/file\/d\/(.+?)\//)?.[1];
-        } else if (url.includes("open?id=")) {
-          fileId = url.split("open?id=")[1].split("&")[0];
-        }
-
-        if (fileId) {
+        if (url.includes("file/d/")) {
+          const fileId = url.match(/\/file\/d\/(.+?)\//)?.[1];
           embedUrl = `https://drive.google.com/uc?export=view&id=${fileId}`;
-        } else {
-          embedUrl = ""; // fallback
+        } else if (url.includes("open?id=")) {
+          embedUrl = url.replace("open?id=", "uc?export=view&id=");
         }
       } else {
         embedUrl = './img/' + url;
       }
 
-      return embedUrl
-        ? `<a href="${url}" target="_blank"><img src="${embedUrl}" alt="写真" width="80"></a>`
-        : `<img src="https://via.placeholder.com/80?text=No+Image" alt="写真">`;
+      return `<a href="${url}" target="_blank"><img src="${embedUrl}" alt="写真" width="80"></a>`;
     })()
-  : `<img src="https://via.placeholder.com/80?text=No+Image" alt="写真">`;
-  
-                          ${image}
+  : `<img src="https://via.placeholder.com/80?text=No+Image" alt="写真">`;      card.innerHTML = `
+            ${image}
             <div class="card-content">
               <h2>${item["道具の名前"]}</h2>
               <p><strong>カテゴリ:</strong> ${item["カテゴリ"]}</p>
